@@ -1,3 +1,3 @@
-module github.com/GmSSL/GmSSL-Go
+module github.com/WandQ/GmSSL-Go
 
 go 1.19
