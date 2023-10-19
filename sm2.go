@@ -259,3 +259,70 @@ func (sig *Sm2Signature) Verify(signature []byte) bool {
 	}
 	return true
 }
+
+func (sm2 *Sm2Key) ExportPublicKeyToDer() ([]byte, error) {
+	outbuf := make([]byte, 512)
+	var outlen C.size_t
+	if C.sm2_public_key_info_to_der_for_go(&sm2.sm2_key, (*C.uchar)(&outbuf[0]), &outlen) != 1 {
+		return nil, errors.New("Libgmssl inner error")
+	}
+	publicKeyBytes := outbuf[:outlen]
+	//pemBlock := &pem.Block{
+	//	Type:  "PUBLIC KEY",
+	//	Bytes: publicKeyBytes,
+	//}
+	//pemBytes := pem.EncodeToMemory(pemBlock)
+	return publicKeyBytes, nil
+}
+
+func (sm2 *Sm2Key) ImportPublicKeyFromDer(pub []byte) error {
+	//pemBlock, _ := pem.Decode(pubPem)
+	//if pemBlock == nil {
+	//	return errors.New("decode public key error")
+	//}
+	//inbuf := pemBlock.Bytes
+	var inlen C.size_t = C.size_t(len(pub))
+	if C.sm2_public_key_info_from_der_for_go(&sm2.sm2_key, (*C.uchar)(&pub[0]), &inlen) != 1 {
+		return errors.New("Libgmssl inner error")
+	}
+	sm2.has_private_key = false
+	return nil
+}
+
+func (sm2 *Sm2Key) ExportPrivateKeyToDer(pwd []byte) ([]byte, error) {
+	if sm2.has_private_key != true {
+		return nil, errors.New("Not private key")
+	}
+
+	pass_str := C.CString(string(pwd))
+	defer C.free(unsafe.Pointer(pass_str))
+
+	outbuf := make([]byte, 1024)
+	var outlen C.size_t
+	if C.sm2_private_key_info_encrypt_to_der_for_go(&sm2.sm2_key, pass_str, (*C.uchar)(&outbuf[0]), &outlen) != 1 {
+		return nil, errors.New("Libgmssl inner error")
+	}
+	privatKeyBytes := outbuf[:outlen]
+	//pemBlock := &pem.Block{
+	//	Type:  "ENCRYPTED PRIVATE KEY",
+	//	Bytes: privatKeyBytes,
+	//}
+	//pemBytes := pem.EncodeToMemory(pemBlock)
+	return privatKeyBytes, nil
+}
+
+func (sm2 *Sm2Key) ImportPrivateKeyFromDer(prv, pwd []byte) error {
+	//pemBlock, _ := pem.Decode(prv)
+	//if pemBlock == nil {
+	//	return errors.New("decode public key error")
+	//}
+	pass_str := C.CString(string(pwd))
+	defer C.free(unsafe.Pointer(pass_str))
+	//inbuf := pemBlock.Bytes
+	var inlen C.size_t = C.size_t(len(prv))
+	if C.sm2_private_key_info_decrypt_from_der_for_go(&sm2.sm2_key, pass_str, (*C.uchar)(&prv[0]), &inlen) != 1 {
+		return errors.New("Libgmssl inner error")
+	}
+	sm2.has_private_key = true
+	return nil
+}
