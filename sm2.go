@@ -7,7 +7,7 @@
  *  http://www.apache.org/licenses/LICENSE-2.0
  */
 /* +build cgo */
-package gmssl
+package gmssl3
 
 /*
 #include <stdio.h>
@@ -20,30 +20,28 @@ package gmssl
 import "C"
 
 import (
-	"unsafe"
 	"errors"
+	"unsafe"
 )
 
-
 const (
-	Sm2DefaultId = "1234567812345678"
-	Sm2MaxSignatureSize = 72
-	Sm2MinPlaintextSize = 1
-	Sm2MaxPlaintextSize = 255
+	Sm2DefaultId         = "1234567812345678"
+	Sm2MaxSignatureSize  = 72
+	Sm2MinPlaintextSize  = 1
+	Sm2MaxPlaintextSize  = 255
 	Sm2MinCiphertextSize = 45
 	Sm2MaxCiphertextSize = 366
 )
 
-
 type Sm2Key struct {
-	sm2_key C.SM2_KEY
+	sm2_key         C.SM2_KEY
 	has_private_key bool
 }
 
 func GenerateSm2Key() (*Sm2Key, error) {
 	ret := new(Sm2Key)
 
-	if C.sm2_key_generate(&ret.sm2_key) != 1{
+	if C.sm2_key_generate(&ret.sm2_key) != 1 {
 		return nil, errors.New("Libgmssl inner error")
 	}
 	ret.has_private_key = true
@@ -192,10 +190,9 @@ func (sm2 *Sm2Key) Decrypt(in []byte) ([]byte, error) {
 	return outbuf[:outlen], nil
 }
 
-
 type Sm2Signature struct {
 	sm2_sign_ctx C.SM2_SIGN_CTX
-	sign bool
+	sign         bool
 }
 
 func NewSm2Signature(sm2 *Sm2Key, id string, sign bool) (*Sm2Signature, error) {
@@ -262,6 +259,3 @@ func (sig *Sm2Signature) Verify(signature []byte) bool {
 	}
 	return true
 }
-
-
-

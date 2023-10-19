@@ -7,7 +7,7 @@
  *  http://www.apache.org/licenses/LICENSE-2.0
  */
 
-package gmssl
+package gmssl3
 
 import (
 	"fmt"
@@ -17,7 +17,7 @@ import (
 
 func TestCert(t *testing.T) {
 
-	text :=`-----BEGIN CERTIFICATE-----
+	text := `-----BEGIN CERTIFICATE-----
 MIIBszCCAVegAwIBAgIIaeL+wBcKxnswDAYIKoEcz1UBg3UFADAuMQswCQYDVQQG
 EwJDTjEOMAwGA1UECgwFTlJDQUMxDzANBgNVBAMMBlJPT1RDQTAeFw0xMjA3MTQw
 MzExNTlaFw00MjA3MDcwMzExNTlaMC4xCzAJBgNVBAYTAkNOMQ4wDAYDVQQKDAVO
@@ -59,4 +59,3 @@ pDoiVhsLwg==
 		t.Error("Test failure")
 	}
 }
-

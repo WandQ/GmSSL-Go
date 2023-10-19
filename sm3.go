@@ -8,7 +8,7 @@
  */
 /* +build cgo */
 
-package gmssl
+package gmssl3
 
 /*
 #include <stdlib.h>
@@ -30,15 +30,14 @@ const (
 
 	Sm3HmacMinKeySize = 16
 	Sm3HmacMaxKeySize = 64
-	Sm3HmacSize = 32
+	Sm3HmacSize       = 32
 
-	Sm3Pbkdf2MinIter = 10000
-	Sm3Pbkdf2MaxIter = 16777216
-	Sm3Pbkdf2MaxSaltSize = 64
+	Sm3Pbkdf2MinIter         = 10000
+	Sm3Pbkdf2MaxIter         = 16777216
+	Sm3Pbkdf2MaxSaltSize     = 64
 	Sm3Pbkdf2DefaultSaltSize = 8
-	Sm3Pbkdf2MaxKeySize = 256
+	Sm3Pbkdf2MaxKeySize      = 256
 )
-
 
 type Sm3 struct {
 	sm3_ctx C.SM3_CTX
@@ -52,7 +51,7 @@ func NewSm3() *Sm3 {
 
 func (sm3 *Sm3) Update(data []byte) {
 	if len(data) > 0 {
-		C.sm3_update(&sm3.sm3_ctx, (*C.uchar)(unsafe.Pointer(&data[0])), C.size_t(len(data)));
+		C.sm3_update(&sm3.sm3_ctx, (*C.uchar)(unsafe.Pointer(&data[0])), C.size_t(len(data)))
 	}
 }
 
@@ -65,7 +64,6 @@ func (sm3 *Sm3) Digest() []byte {
 func (sm3 *Sm3) Reset() {
 	C.sm3_init(&sm3.sm3_ctx)
 }
-
 
 type Sm3Hmac struct {
 	sm3_hmac_ctx C.SM3_HMAC_CTX
@@ -100,7 +98,6 @@ func (hmac *Sm3Hmac) Reset(key []byte) error {
 	return nil
 }
 
-
 func Sm3Pbkdf2(pass string, salt []byte, iter uint, keylen uint) ([]byte, error) {
 
 	if len(salt) > Sm3Pbkdf2MaxSaltSize {
@@ -127,4 +124,3 @@ func Sm3Pbkdf2(pass string, salt []byte, iter uint, keylen uint) ([]byte, error)
 
 	return key, nil
 }
-

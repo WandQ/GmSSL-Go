@@ -7,7 +7,7 @@
  *  http://www.apache.org/licenses/LICENSE-2.0
  */
 /* +build cgo */
-package gmssl
+package gmssl3
 
 /*
 #include <stdio.h>
@@ -20,21 +20,19 @@ package gmssl
 import "C"
 
 import (
-	"unsafe"
 	"errors"
+	"unsafe"
 )
-
 
 const (
-	Sm9MaxIdSize = 63
-	Sm9MaxPlaintextSize = 255
+	Sm9MaxIdSize         = 63
+	Sm9MaxPlaintextSize  = 255
 	Sm9MaxCiphertextSize = 367
-	Sm9SignatureSize = 104
+	Sm9SignatureSize     = 104
 )
 
-
 type Sm9EncMasterKey struct {
-	master_key C.SM9_ENC_MASTER_KEY
+	master_key      C.SM9_ENC_MASTER_KEY
 	has_private_key bool
 }
 
@@ -42,7 +40,7 @@ func GenerateSm9EncMasterKey() (*Sm9EncMasterKey, error) {
 
 	ret := new(Sm9EncMasterKey)
 
-	if C.sm9_enc_master_key_generate(&ret.master_key) != 1{
+	if C.sm9_enc_master_key_generate(&ret.master_key) != 1 {
 		return nil, errors.New("Libgmssl inner error")
 	}
 	ret.has_private_key = true
@@ -172,10 +170,9 @@ func (sm9 *Sm9EncMasterKey) Encrypt(in []byte, to string) ([]byte, error) {
 	return outbuf[:outlen], nil
 }
 
-
 type Sm9EncKey struct {
 	key C.SM9_ENC_KEY
-	id string
+	id  string
 }
 
 func ImportEncryptedSm9EncPrivateKeyInfoPem(path string, pass string, id string) (*Sm9EncKey, error) {
@@ -241,9 +238,8 @@ func (sm9 *Sm9EncKey) Decrypt(in []byte) ([]byte, error) {
 	return outbuf[:outlen], nil
 }
 
-
 type Sm9SignMasterKey struct {
-	master_key C.SM9_SIGN_MASTER_KEY
+	master_key      C.SM9_SIGN_MASTER_KEY
 	has_private_key bool
 }
 
@@ -251,7 +247,7 @@ func GenerateSm9SignMasterKey() (*Sm9SignMasterKey, error) {
 
 	ret := new(Sm9SignMasterKey)
 
-	if C.sm9_sign_master_key_generate(&ret.master_key) != 1{
+	if C.sm9_sign_master_key_generate(&ret.master_key) != 1 {
 		return nil, errors.New("Libgmssl inner error")
 	}
 	ret.has_private_key = true
@@ -362,11 +358,9 @@ func (sm9 *Sm9SignMasterKey) ExtractKey(id string) (*Sm9SignKey, error) {
 	return ret, nil
 }
 
-
-
 type Sm9SignKey struct {
 	key C.SM9_SIGN_KEY
-	id string
+	id  string
 }
 
 func ImportEncryptedSm9SignPrivateKeyInfoPem(path string, pass string, id string) (*Sm9SignKey, error) {
@@ -419,7 +413,7 @@ func (sm9 *Sm9SignKey) ExportEncryptedPrivateKeyInfoPem(path string, pass string
 
 type Sm9Signature struct {
 	sm9_sign_ctx C.SM9_SIGN_CTX
-	sign bool
+	sign         bool
 }
 
 func NewSm9Signature(sign bool) (*Sm9Signature, error) {
@@ -483,4 +477,3 @@ func (sig *Sm9Signature) Verify(signature []byte, master_public_key *Sm9SignMast
 	}
 	return true
 }
-

@@ -7,7 +7,7 @@
  *  http://www.apache.org/licenses/LICENSE-2.0
  */
 
-package gmssl
+package gmssl3
 
 import (
 	"bytes"
@@ -63,6 +63,3 @@ func TestSm9Sign(t *testing.T) {
 		t.Error("Test failure")
 	}
 }
-
-
-

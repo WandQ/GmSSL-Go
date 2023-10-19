@@ -7,7 +7,7 @@
  *  http://www.apache.org/licenses/LICENSE-2.0
  */
 /* +build cgo */
-package gmssl
+package gmssl3
 
 /*
 #include <gmssl/rand.h>

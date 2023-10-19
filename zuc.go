@@ -7,7 +7,7 @@
  *  http://www.apache.org/licenses/LICENSE-2.0
  */
 /* +build cgo */
-package gmssl
+package gmssl3
 
 /*
 #include <stdlib.h>
@@ -23,7 +23,6 @@ import (
 
 const ZucKeySize = 16
 const ZucIvSize = 16
-
 
 type Zuc struct {
 	zuc_ctx C.ZUC_CTX
@@ -49,7 +48,7 @@ func NewZuc(key []byte, iv []byte) (*Zuc, error) {
 }
 
 func (zuc *Zuc) Update(in []byte) ([]byte, error) {
-	outbuf := make([]byte, len(in) + 16)
+	outbuf := make([]byte, len(in)+16)
 	var outlen C.size_t
 	if 1 != C.zuc_encrypt_update(&zuc.zuc_ctx, (*C.uchar)(&in[0]), C.size_t(len(in)), (*C.uchar)(&outbuf[0]), &outlen) {
 		return nil, errors.New("Libgmssl inner error")

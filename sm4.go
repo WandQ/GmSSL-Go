@@ -7,7 +7,7 @@
  *  http://www.apache.org/licenses/LICENSE-2.0
  */
 /* +build cgo */
-package gmssl
+package gmssl3
 
 /*
 #include <stdlib.h>
@@ -25,20 +25,19 @@ import (
 )
 
 const (
-	Sm4KeySize = 16
+	Sm4KeySize   = 16
 	Sm4BlockSize = 16
 
 	Sm4CbcIvSize = 16
 
 	Sm4CtrIvSize = 16
 
-	Sm4GcmMinIvSize = 8
-	Sm4GcmMaxIvSize = 64
-	Sm4GcmDefaultIvSize = 64
+	Sm4GcmMinIvSize      = 8
+	Sm4GcmMaxIvSize      = 64
+	Sm4GcmDefaultIvSize  = 64
 	Sm4GcmDefaultTagSize = 16
-	Sm4GcmMaxTagSize = 16
+	Sm4GcmMaxTagSize     = 16
 )
-
 
 type Sm4 struct {
 	sm4_key C.SM4_KEY
@@ -76,11 +75,9 @@ func (sm4 *Sm4) Encrypt(block []byte) ([]byte, error) {
 	return outbuf, nil
 }
 
-
-
 type Sm4Cbc struct {
 	sm4_cbc_ctx C.SM4_CBC_CTX
-	encrypt bool
+	encrypt     bool
 }
 
 func NewSm4Cbc(key []byte, iv []byte, encrypt bool) (*Sm4Cbc, error) {
@@ -139,7 +136,7 @@ func (cbc *Sm4Cbc) Reset(key []byte, iv []byte, encrypt bool) error {
 
 func (cbc *Sm4Cbc) Update(data []byte) ([]byte, error) {
 
-	outbuf := make([]byte, len(data) + Sm4BlockSize)
+	outbuf := make([]byte, len(data)+Sm4BlockSize)
 	var outlen C.size_t
 
 	if cbc.encrypt {
@@ -178,7 +175,6 @@ func (cbc *Sm4Cbc) Finish() ([]byte, error) {
 
 	return outbuf[:outlen], nil
 }
-
 
 type Sm4Ctr struct {
 	sm4_ctr_ctx C.SM4_CTR_CTX
@@ -227,7 +223,7 @@ func (ctr *Sm4Ctr) Reset(key []byte, iv []byte) error {
 
 func (ctr *Sm4Ctr) Update(data []byte) ([]byte, error) {
 
-	outbuf := make([]byte, len(data) + Sm4BlockSize)
+	outbuf := make([]byte, len(data)+Sm4BlockSize)
 	var outlen C.size_t
 
 	if 1 != C.sm4_ctr_encrypt_update(&ctr.sm4_ctr_ctx,
@@ -248,10 +244,9 @@ func (ctr *Sm4Ctr) Finish() ([]byte, error) {
 	return outbuf[:outlen], nil
 }
 
-
 type Sm4Gcm struct {
 	sm4_gcm_ctx C.SM4_GCM_CTX
-	encrypt bool
+	encrypt     bool
 }
 
 func NewSm4Gcm(key []byte, iv []byte, aad []byte, taglen int, encrypt bool) (*Sm4Gcm, error) {
@@ -319,7 +314,7 @@ func (gcm *Sm4Gcm) Reset(key []byte, iv []byte, aad []byte, taglen int, encrypt 
 }
 
 func (gcm *Sm4Gcm) Update(data []byte) ([]byte, error) {
-	outbuf := make([]byte, len(data) + Sm4BlockSize)
+	outbuf := make([]byte, len(data)+Sm4BlockSize)
 	var outlen C.size_t
 	if gcm.encrypt {
 		if 1 != C.sm4_gcm_encrypt_update(&gcm.sm4_gcm_ctx,
@@ -339,7 +334,7 @@ func (gcm *Sm4Gcm) Finish() ([]byte, error) {
 	var outbuf []byte
 	var outlen C.size_t
 	if gcm.encrypt {
-		outbuf = make([]byte, Sm4BlockSize + Sm4GcmMaxTagSize)
+		outbuf = make([]byte, Sm4BlockSize+Sm4GcmMaxTagSize)
 		if 1 != C.sm4_gcm_encrypt_finish(&gcm.sm4_gcm_ctx, (*C.uchar)(&outbuf[0]), &outlen) {
 			return nil, errors.New("Libgmssl inner error")
 		}
@@ -351,4 +346,3 @@ func (gcm *Sm4Gcm) Finish() ([]byte, error) {
 	}
 	return outbuf[:outlen], nil
 }
-

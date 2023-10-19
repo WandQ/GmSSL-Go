@@ -7,7 +7,7 @@
  *  http://www.apache.org/licenses/LICENSE-2.0
  */
 
-package gmssl
+package gmssl3
 
 import (
 	"testing"
@@ -21,4 +21,3 @@ func TestRand(t *testing.T) {
 		t.Error("Test failure")
 	}
 }
-

@@ -7,11 +7,11 @@
  *  http://www.apache.org/licenses/LICENSE-2.0
  */
 
-package gmssl
+package gmssl3
 
 import (
-	"encoding/hex"
 	"bytes"
+	"encoding/hex"
 	"testing"
 )
 
@@ -97,5 +97,3 @@ func TestSm4Gcm(t *testing.T) {
 		t.Error("Test failure")
 	}
 }
-
-

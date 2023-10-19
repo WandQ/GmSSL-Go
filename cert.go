@@ -7,7 +7,7 @@
  *  http://www.apache.org/licenses/LICENSE-2.0
  */
 /* +build cgo */
-package gmssl
+package gmssl3
 
 /*
 #include <stdio.h>
@@ -25,15 +25,14 @@ package gmssl
 import "C"
 
 import (
-	"unsafe"
 	"errors"
 	"runtime"
 	"time"
+	"unsafe"
 )
 
-
 type Sm2Certificate struct {
-	cert *C.uint8_t
+	cert    *C.uint8_t
 	certlen C.size_t
 }
 
@@ -84,12 +83,11 @@ func (cert *Sm2Certificate) GetValidity() (time.Time, time.Time, error) {
 		nil, nil, nil, nil, nil, nil,
 		&not_before, &not_after,
 		nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil, nil) != 1 {
-		return time.Unix(0,0), time.Unix(0,0), errors.New("Libgmssl inner error")
+		return time.Unix(0, 0), time.Unix(0, 0), errors.New("Libgmssl inner error")
 	}
 
 	return time.Unix(int64(not_before), 0), time.Unix(int64(not_after), 0), nil
 }
-
 
 func gmssl_parse_attr_type_and_value(name map[string]string, d *C.uint8_t, dlen C.size_t) error {
 	var oid C.int
@@ -121,7 +119,7 @@ func gmssl_parse_attr_type_and_value(name map[string]string, d *C.uint8_t, dlen 
 		return errors.New("libgmssl inner error")
 	}
 
-	return nil;
+	return nil
 }
 
 func gmssl_parse_rdn(name map[string]string, d *C.uint8_t, dlen C.size_t) error {
@@ -217,5 +215,3 @@ func (cert *Sm2Certificate) VerifyByCaCertificate(ca_cert *Sm2Certificate, sm2_i
 	}
 	return true
 }
-
-

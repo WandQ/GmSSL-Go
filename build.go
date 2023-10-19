@@ -8,7 +8,7 @@
  */
 /* +build cgo */
 
-package gmssl
+package gmssl3
 
 /*
 #cgo LDFLAGS: -lgmssl

@@ -7,7 +7,7 @@
  *  http://www.apache.org/licenses/LICENSE-2.0
  */
 
-package gmssl
+package gmssl3
 
 import (
 	"bytes"
@@ -35,7 +35,7 @@ func TestSm2(t *testing.T) {
 		t.Error("Test failure")
 	}
 
-	plaintext, _ := RandBytes(Sm2MaxPlaintextSize/4)
+	plaintext, _ := RandBytes(Sm2MaxPlaintextSize / 4)
 	ciphertext, _ := sm2pub.Encrypt(plaintext)
 	decrypted, _ := sm2pri.Decrypt(ciphertext)
 
@@ -65,9 +65,3 @@ func TestSm2Sign(t *testing.T) {
 		t.Error("Test failure")
 	}
 }
-
-
-
-
-
-
