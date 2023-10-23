@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/WandQ/GmSSL-Go"
+	gmssl "github.com/WandQ/GmSSL-Go"
 )
 
 func main() {
